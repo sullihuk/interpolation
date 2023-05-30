@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 #define size 20
+#define h 0.1
 
 float u_cal(float u, int n)
 {
@@ -24,17 +25,26 @@ int fact(int n)
 int main()
 {
     // Number of values given
-    int n = 4;
-    float x[] = { 45, 50, 55, 60 };
-     
+    int n = size;
+    float a = 1;
+    float b = 2;
+    float x[10];
     // y[][] is used for difference table
     // with y[][0] used for input
     float y[n][n];
-    y[0][0] = 0.7071;
-    y[1][0] = 0.7660;
-    y[2][0] = 0.8192;
-    y[3][0] = 0.8660;
+    while (a==b)
+    {
+      int i = 0;
+      x[i] = a;
+      a += h;
+        printf("%.0f\n",x[i]);
+      i++;
+    }
  
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n - i; j++)
+            y[j][i] = y[j + 1][i - 1] - y[j][i - 1];
+    }
     // Calculating the forward difference
     // table
     for (int i = 1; i < n; i++) {
@@ -49,18 +59,5 @@ int main()
         	printf("%.4f\t",y[i][j]);
 	puts("");
     }
- 
-    // Value to interpolate at
-    float value = 52;
- 
-    // initializing u and sum
-    float sum = y[0][0];
-    float u = (value - x[0]) / (x[1] - x[0]);
-    for (int i = 1; i < n; i++) {
-        sum = sum + (u_cal(u, i) * y[0][i]) /
-                                 fact(i);
-    }
- 
-        	printf("Value at %.2f is %.2f\n",value, sum);
     return 0;
 }
