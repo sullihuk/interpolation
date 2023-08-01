@@ -37,7 +37,7 @@ int main()
       int i = 0;
       x[i] = a;
       a += h;
-        printf("%.0f\n",x[i]);
+        printf("%.3f\n",x[i]);
       i++;
     }
  
@@ -54,9 +54,9 @@ int main()
  
     // Displaying the forward difference table
     for (int i = 0; i < n; i++) {
-        printf("%.0f\t",x[i]);
+        printf("%.3f\t",x[i]);
         for (int j = 0; j < n - i; j++)
-        	printf("%.4f\t",y[i][j]);
+        	printf("%.3f\t",y[i][j]);
 	puts("");
     }
     return 0;

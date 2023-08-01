@@ -2,28 +2,34 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <Windows.h>
 #define size 20
 
 float givenFunc(float x);
 float stepX(int t);
 float h = 0.1;
-//int n[size];
+float start = 1;
+float finish = 2;
 
 float stepX(int j)
 {
-  return 1+j*h/2;
+  return start + j*h/2; // По условию, Вариант 6
 }
 
-float givenFunc(float x)
+float givenFunc(float x) 
 {
-  return x*log(x);
+  return x*log(x); // По условию, Вариант 6
 }
 
 void starting()
 {
-	for(float i = 1; i<=2.1; i+=0.1)
+	int i = 0;
+	printf("\tx\tf(x)\n");
+	while (i != size)
 	{
-		printf(" %.2f %.2f \n",i,givenFunc(i));
+		printf("\t%.2f\t%.2f\n",stepX(start), givenFunc(stepX(start)));
+		i++;
+		start += stepX(start+h);
 	}
 }
 
@@ -37,8 +43,8 @@ void interpolation()
 
 int main()
 {
+	system("chcp 65001");
 	starting();
-  interpolation();
 }
 
 
