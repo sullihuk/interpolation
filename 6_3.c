@@ -11,6 +11,20 @@ double h = 0.1;
 double start = 1;
 double finish = 2;
 int orderP;
+void printer(double arr[size][orderP+2]);
+void endedDif(double arr[size][orderP+2]);
+
+void printer(double arr[size][orderP+2])
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < orderP+2; j++)
+		{
+			printf("%.3f ", arr[i][j]);
+		}
+		puts("");
+	}
+}
 
 double stepX(int arg)
 {
@@ -41,26 +55,37 @@ void starting(double started, double finished, double step)
 
 void newNet()
 {
-	int j = 0;
-	double netStore[size][orderP];
-	printf("xj\t\tf(xj)\n");
+	double netStore[size][orderP+2];
+	printf("xj    f(xj)\n");
 	for (int i = 0; i < size; i++)
 	{
 		netStore[i][0] = stepX(i);
 		netStore[i][1] = givenFunc(stepX(i));
-		//printf("x_%d: %.2f\ty_%d: %.2f\n", i, netStore[i][0], i, netStore[i][1]);
-		for (int j = 0; j<=orderP; j++)
+		for (int j = 2; j<=orderP+2; j++)
 		{
-			netStore[j][i+2] = givenFunc(stepX(j+1))-givenFunc(stepX(j));
-			printf("dy_%d: %.2f  ", j+1, netStore[i][j]); 
+			netStore[i][j] = 0;
+			//printf("dy_%d: %.2f  ", j+1, netStore[i][j]); 
 		}
-		puts("");
+		//puts("");
 	}
 	/*while (j != size)
 	{
 		printf("\tx_%d: %.2f\ty_%d: %.2f\tdy_%d: %.2f\n", j, stepX(j), j, givenFunc(stepX(j)), j, givenFunc(stepX(j+1))-givenFunc(stepX(j)));
 		j++;
 	}*/
+	endedDif(netStore);
+	printer(netStore);
+}
+
+void endedDif(double arr[size][orderP+2])
+{
+	for (int i = 1; i<size; i++)
+	{
+		for (int j = 1; j<orderP+1; j++)
+		{
+			arr[j][i] = arr[j+1][i-1] - arr[j][i-1];
+		}
+	}
 }
 
 void interpolation()
