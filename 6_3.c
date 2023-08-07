@@ -12,7 +12,7 @@ double start = 1;
 double finish = 2;
 int orderP;
 void printer(double arr[size][orderP+2]);
-void endedDif(double arr[size][orderP+2]);
+void endingDif(double arr[size][orderP+2]);
 
 void printer(double arr[size][orderP+2])
 {
@@ -73,15 +73,15 @@ void newNet()
 		printf("\tx_%d: %.2f\ty_%d: %.2f\tdy_%d: %.2f\n", j, stepX(j), j, givenFunc(stepX(j)), j, givenFunc(stepX(j+1))-givenFunc(stepX(j)));
 		j++;
 	}*/
-	endedDif(netStore);
+	endingDif(netStore);
 	printer(netStore);
 }
 
-void endedDif(double arr[size][orderP+2])
+void endingDif(double arr[size][orderP+2])
 {
-	for (int i = 1; i<size; i++)
+	for (int i = 2; i<size; i++)
 	{
-		for (int j = 1; j<orderP+1; j++)
+		for (int j = 0; j<orderP-i+2; j++)
 		{
 			arr[j][i] = arr[j+1][i-1] - arr[j][i-1];
 		}
