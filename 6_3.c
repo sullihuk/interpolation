@@ -11,127 +11,107 @@ double h = 0.1;
 double start = 1;
 double finish = 2;
 int orderP;
-void printer(int params, double arr[params][orderP+2]);
-void endingDif(double arr[size][orderP+2]);
-
-void printer(int params, double arr[params][orderP+2])
-{
-	for (int i = 0; i < params+2; i++)
-	{
-		for (int j = 0; j < orderP+2-i; j++)
-		{
-			printf("%.3f ", arr[i][j]);
-		}
-		puts("");
-	}
-	printf("%d", params);
-}
+void printer(int params, double** arr);
+void endingDif(double** arr);
 
 double stepX(int arg)
 {
-  return start + arg*h/2; // По условию, Вариант 6
+  return start + arg * h / 2; // По условию, Вариант 6
 }
 
 int fact(int n)
 {
-    int f = 1;
-    for (int i = 2; i <= n; i++)
-        f *= i;
-    return f;
+  int f = 1;
+  for (int i = 2; i <= n; i++)
+      f *= i;
+  return f;
 }
 
-double givenFunc(double x) 
+double givenFunc(double x)
 {
-  return x*log(x); // По условию, Вариант 6
+  return x * log(x); // По условию, Вариант 6
 }
 
-void starting(double started, double finished, double step)
+void printer(int params, double** arr)
 {
-	int iI = (int)((finished+step-started)/step);
-	double netStore[iI][orderP+2];
-	printf("x     f(x)\n");
-	for (int i = 0; i < iI+1; i++)
-	{
-		netStore[i][0] = started;
-		netStore[i][1] = givenFunc(started);
-		for (int j = 2; j<=orderP+2; j++)
-		{
-			netStore[i][j] = 0;
-		}
-		started += step;
-	}
+  for (int i = 0; i < params; i++)
+  {
+    for (int j = 0; j < 2; j++)
+    {
+      printf("%.3f ", arr[i][j]);
+    }
+    for (int j = 2; j < orderP + 2 - i; j++)
+    {
+      printf("%.3f ", arr[i][j]);
+    }
+    puts("");
+  }
+}
 
-	/*for (started; started<finished+h; started+=step)
-	{
-		int i = 0;
-		netStore[i][0] = started;
-		netStore[i][1] = givenFunc(started);
-		for (int j = 2; j<=orderP+2; j++)
-		{
-			//netStore[i][j] = 0;
-		}
-		i++;
-	}*/
-	//endingDif(netStore);
-	printer(iI,netStore);
+void endingDif(double** arr)
+{
+  for (int i = 2; i < size; i++)
+  {
+    for (int j = 0; j < orderP - i + 2; j++)
+    {
+      arr[j][i] = arr[j + 1][i - 1] - arr[j][i - 1];
+    }
+  }
+}
+
+void starting(double started, double finished, double step, double** netStore)
+{
+  double cher = (finished + step - started) / step;
+  int iI = (int)cher;
+  printf("x     f(x)\n");
+  for (int i = 0; i < iI; i++)
+  {
+    netStore[i][0] = started;
+    netStore[i][1] = givenFunc(started);
+    for (int j = 2; j <= orderP + 3; j++)
+    {
+      netStore[i][j] = 0;
+    }
+	started += step;
+  }
+	endingDif(netStore);
+	printer(iI, netStore);
 }
 
 void newNet()
 {
-	//double netStore[size][orderP+2];
-	printf("xj    f(xj)\n");
-	for (int i = 0; i < size; i++)
-	{
-		//netStore[i][0] = stepX(i);
-		//netStore[i][1] = givenFunc(stepX(i));
-		for (int j = 2; j<=orderP+2; j++)
-		{
-			//netStore[i][j] = 0;
-		}
-	}
-	//endingDif(netStore);
-	//printer(netStore);
-}
-
-void endingDif(double arr[size][orderP+2])
-{
-	for (int i = 2; i<size; i++)
-	{
-		for (int j = 0; j<orderP-i+2; j++)
-		{
-			arr[j][i] = arr[j+1][i-1] - arr[j][i-1];
-		}
-	}
-}
-
-void interpolation()
-{
-	for(int i = 0; i<orderP; i++)
-	{
-		printf("%d %.2f %.2f \n",i+1,stepX(i), givenFunc(stepX(i)));
-	}
+  double** newnetStore = malloc(size * sizeof(double*));
+  for (int i = 0; i < size; i++)
+  {
+    newnetStore[i] = malloc(size * sizeof(double));
+	newnetStore[i][0] = stepX(i);
+    newnetStore[i][1] = givenFunc(stepX(i));
+  }
+  printer (size, newnetStore);
 }
 
 int main()
 {
-	system("chcp 65001");
-	do {
-		printf("Введите желаемую степень полинома интерполирования в пределах от 1 до %d: ", size-1);
-		if (scanf("%d", &orderP) != 1){
-			while(getchar() != '\n');
-			printf("Степень полинома должна быть числом, попробуйте ещё раз: ");
-			continue;
-			puts("");
-		}
-		if (orderP < 1 || orderP> size) {
-			printf("Степень полинома должна быть в заданных пределах, попробуйте ещё раз: ");
-			puts("");
-		}
-	} while(orderP <1 || orderP>size);
+  system("chcp 65001");
+  do {
+    printf("Введите желаемую степень полинома интерполирования в пределах от 1 до %d: ", size - 1);
+    if (scanf("%d", &orderP) != 1) {
+      while (getchar() != '\n');
+      printf("Степень полинома должна быть числом, попробуйте ещё раз: ");
+      continue;
+      puts("");
+    }
+    if (orderP < 1 || orderP > size) {
+      printf("Степень полинома должна быть в заданных пределах, попробуйте ещё раз: ");
+      puts("");
+    }
+  } while (orderP < 1 || orderP > size);
 
-	starting(start, finish, h);
-	//newNet();
+  double** netStore = malloc(size * sizeof(double*));
+  for (int i = 0; i < size; i++) {
+    netStore[i] = malloc((orderP + 2) * sizeof(double));
+  }
+
+  starting(start, finish, h, netStore);
+  newNet();
 }
-
-
-
