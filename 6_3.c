@@ -80,14 +80,33 @@ void starting(double started, double finished, double step, double** netStore)
 
 void newNet()
 {
+	double polynom;
   double** newnetStore = malloc(size * sizeof(double*));
+	polynom = newnetStore[0][1];
   for (int i = 0; i < size; i++)
   {
     newnetStore[i] = malloc(size * sizeof(double));
 	newnetStore[i][0] = stepX(i);
     newnetStore[i][1] = givenFunc(stepX(i));
   }
-  printer (size, newnetStore);
+	for (int i =1; i < size; i++)
+	{
+		double q = (newnetStore[i][0] - netStore[i][0])/(netStore[i+1][0] - netStore[i][0]); 
+		polynom += (qComp(q, i)*netStore[0][i])/fact(i);
+		newnetStore[i][2] = polynom;
+		for (int j = 0; j < 3; j++)
+			printf("%.3f ", newnetStore[i-1][j]); 
+		puts("");
+	}
+
+}
+
+double qComp(double q, int n)
+{
+	double temp = q;
+	for (int i = 1; i<n; i++)
+		temp = temp * (q-i);
+	return temp
 }
 
 int main()
