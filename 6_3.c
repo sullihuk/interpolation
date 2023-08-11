@@ -13,6 +13,7 @@ double finish = 2;
 int orderP;
 void printer(int params, double** arr);
 void endingDif(double** arr);
+double qComp(double q, int n);
 
 double stepX(int arg)
 {
@@ -78,27 +79,23 @@ void starting(double started, double finished, double step, double** netStore)
 	printer(iI, netStore);
 }
 
-void newNet()
+void newNet(double** netStore)
 {
 	double polynom;
-  double** newnetStore = malloc(size * sizeof(double*));
-	polynom = newnetStore[0][1];
-  for (int i = 0; i < size; i++)
-  {
-    newnetStore[i] = malloc(size * sizeof(double));
-	newnetStore[i][0] = stepX(i);
-    newnetStore[i][1] = givenFunc(stepX(i));
-  }
-	for (int i =1; i < size; i++)
+	double** newnetStore = malloc(size * sizeof(double*));
+	for (int i = 0; i < size; i++)
 	{
+		newnetStore[i] = malloc(size * sizeof(double));
+		newnetStore[i][0] = stepX(i);
+		polynom = netStore[i][0];
+		
 		double q = (newnetStore[i][0] - netStore[i][0])/(netStore[i+1][0] - netStore[i][0]); 
-		polynom += (qComp(q, i)*netStore[0][i])/fact(i);
-		newnetStore[i][2] = polynom;
-		for (int j = 0; j < 3; j++)
-			printf("%.3f ", newnetStore[i-1][j]); 
+		polynom += (qComp(q, i+1)*netStore[0][i+1])/fact(i+1);
+		newnetStore[i][1] = polynom;
+		for (int j = 0; j < 2; j++)
+			printf("%.3f ", newnetStore[i][j]); 
 		puts("");
 	}
-
 }
 
 double qComp(double q, int n)
@@ -106,7 +103,7 @@ double qComp(double q, int n)
 	double temp = q;
 	for (int i = 1; i<n; i++)
 		temp = temp * (q-i);
-	return temp
+	return temp;
 }
 
 int main()
@@ -132,5 +129,5 @@ int main()
   }
 
   starting(start, finish, h, netStore);
-  newNet();
+  newNet(netStore);
 }
