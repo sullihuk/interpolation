@@ -11,8 +11,9 @@ double h = 0.1;
 double start = 1;
 double finish = 2;
 int orderP;
-void printer(int params, double** arr);
-void endingDif(double** arr);
+void printer(int params, double** arr, int numN);
+void firstNewton(double** arr, int params);
+void secondNewton(double** arr, int params);
 double qComp(double q, int n);
 
 double stepX(int arg)
@@ -33,25 +34,44 @@ double givenFunc(double x)
   return x * log(x); // По условию, Вариант 6
 }
 
-void printer(int params, double** arr)
+void printer(int params, double** arr, int numN)
 {
-  for (int i = 0; i < params; i++)
-  {
-    for (int j = 0; j < 2; j++)
-    {
-      printf("%.3f ", arr[i][j]);
-    }
-    for (int j = 2; j < orderP + 2 - i; j++)
-    {
-      printf("%.3f ", arr[i][j]);
-    }
-    puts("");
-  }
+	if (numN == 1)
+	{
+		for (int i = 0; i < params; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+			  printf("%.3f ", arr[i][j]);
+			}
+			for (int j = 2; j < orderP + 2 - i; j++)
+			{
+			  printf("%.3f ", arr[i][j]);
+			}
+			puts("");
+		}
+	}
+
+	if (numN == 2)
+	{
+		for (int i = 0; i < params; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+			  printf("%.3f ", arr[i][j]);
+			}
+			for (int j = 2; j <= i+2; j++)
+			{
+			  printf("%.3f ", arr[i][j]);
+			}
+			puts("");
+		}
+	}
 }
 
-void endingDif(double** arr)
+void firstNewton(double** arr, int params)
 {
-  for (int i = 2; i < size; i++)
+  for (int i = 2; i < params; i++)
   {
     for (int j = 0; j < orderP - i + 2; j++)
     {
@@ -60,23 +80,36 @@ void endingDif(double** arr)
   }
 }
 
+void secondNewton(double** arr, int params)
+{
+  for (int i = 2; i <= orderP+2; i++)
+  {
+    for (int j = params; j >= i; j--)
+    {
+      arr[j][i] = arr[j][i - 1] - arr[j-1][i - 1];
+    }
+  }
+}
+
 void starting(double started, double finished, double step, double** netStore)
 {
-  double cher = (finished + step - started) / step;
-  int iI = (int)cher;
+  double cher = (finished+step - started) / (step*0.5);
+  int iI = (int)cher-1;
   printf("x     f(x)\n");
   for (int i = 0; i < iI; i++)
   {
-    netStore[i][0] = started;
-    netStore[i][1] = givenFunc(started);
-    for (int j = 2; j <= orderP + 3; j++)
+    netStore[i][0] = stepX(i);
+    netStore[i][1] = givenFunc(stepX(i));
+    for (int j = 2; j <= orderP + 2; j++)
     {
       netStore[i][j] = 0;
     }
-	started += step;
+	//started += step;
   }
-	endingDif(netStore);
-	printer(iI, netStore);
+	firstNewton(netStore, iI);
+	printer(iI, netStore, 1);
+	secondNewton(netStore, iI);
+	printer(iI, netStore, 2);
 }
 
 void newNet(double** netStore)
@@ -134,11 +167,11 @@ int main()
     }
   } while (orderP < 1 || orderP > size);
 
-  double** netStore = malloc(size * sizeof(double*));
-  for (int i = 0; i < size; i++) {
+  double** netStore = malloc((size+1) * sizeof(double*));
+  for (int i = 0; i < size+1; i++) {
     netStore[i] = malloc((orderP + 2) * sizeof(double));
   }
 
   starting(start, finish, h, netStore);
-  newNet(netStore);
+  //newNet(netStore);
 }
