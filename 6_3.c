@@ -59,10 +59,12 @@ void printer(int params, double** arr, int numN)
 			for (int j = 0; j < 2; j++)
 			{
 			  printf("%.3f ", arr[i][j]);
+			  
 			}
-			for (int j = 2; j <= i+2; j++)
+			for (int j = 2; j <= fabs((orderP+2) - (params-i)); j++)
 			{
-			  printf("%.3f ", arr[i][j]);
+				if(params-i<=orderP)
+				printf("%.*lf ", arr[i][j]);
 			}
 			puts("");
 		}
